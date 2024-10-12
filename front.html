@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Blackjack Multijugador</title>
+</head>
+<body>
+    <h1>Blackjack Online</h1>
+    <input id="sala_id" placeholder="ID de la sala">
+    <button onclick="crearSala()">Crear Sala</button>
+    <button onclick="unirseSala()">Unirse a Sala</button>
+    <pre id="mensajes"></pre>
+
+    <script>
+        const socket = new WebSocket('ws://localhost:8080');
+
+        socket.onmessage = function(event) {
+            const mensaje = JSON.parse(event.data);
+            document.getElementById("mensajes").textContent += mensaje.mensaje + '\n';
+        };
+
+        function crearSala() {
+            const salaId = document.getElementById("sala_id").value;
+            socket.send(JSON.stringify({ accion: "crear_sala", sala_id: salaId }));
+        }
+
+        function unirseSala() {
+            const salaId = document.getElementById("sala_id").value;
+            socket.send(JSON.stringify({ accion: "unirse_sala", sala_id: salaId }));
+        }
+    </script>
+</body>
+</html>
